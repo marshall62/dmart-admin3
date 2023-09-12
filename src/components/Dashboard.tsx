@@ -10,6 +10,7 @@ import ArtworkGrid from "./ArtworkGrid";
 import { deleteArtwork, getArtworks, saveArtwork, updateArtwork } from "../services/artworks";
 import MongoContext from "../contexts/MongoContext";
 import GlobalContext from "../contexts/GlobalContext";
+import ImageUploader from "./modals/imageUpload";
 
 export default function Dashboard ({loggedIn= false}) {
 
@@ -20,6 +21,7 @@ export default function Dashboard ({loggedIn= false}) {
   const [artworkToEdit, setArtworkToEdit] = useState<IArtwork>({} as IArtwork);
   const [imageUrl, setImageUrl] = useState("");
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
   const [artworks, setArtworks] = useState<IArtwork[]>([]);
 
   useEffect(() => {
@@ -39,8 +41,24 @@ export default function Dashboard ({loggedIn= false}) {
 
   const handleShowImageModal = (imagePath: string) => {
     setShowImageModal(true);
-    setImageUrl(configContext.config?.imageRootURI + "/midsize/" + imagePath);
+    setImageUrl(configContext.config?.imageRootURI + "/midsize/" + imagePath + "?raw=true");
   };
+
+  const handleImageUpload = (artwork: IArtwork) => {
+    setShowImageUpload(true);
+    setArtworkToEdit(artwork);
+  };
+
+  const handleImageUploadComplete = async (uploadedFilename) => {
+    artworkToEdit.imagePath = uploadedFilename;
+    console.log("Updating filename to ", uploadedFilename)
+    await updateArtwork(mongoContext.client, artworkToEdit); 
+    setShowImageUpload(false);
+  }
+
+  const handleCloseImageUpload = () => {
+    setShowImageUpload(false);
+  }
 
 
   const handleAdd = () => {
@@ -130,6 +148,7 @@ export default function Dashboard ({loggedIn= false}) {
         url={imageUrl}
         show={showImageModal}
         handleClose={handleCloseImageModal}
+        
       ></ImageModal>
       <EditModal
         artwork={artworkToEdit}
@@ -138,11 +157,19 @@ export default function Dashboard ({loggedIn= false}) {
         handleSave={handleSaveEditModal}
       >
       </EditModal>
+      <ImageUploader 
+        artworks={artworks} 
+        show={showImageUpload} 
+        handleClose={handleCloseImageUpload}
+        handleImageUploadComplete={handleImageUploadComplete}
+        />     
+
       <ArtworkGrid
         artworks= {artworks}
-        handleEditArtwork= {handleEditArtwork}
-        handleShowImage= {handleShowImageModal}
-        handleDeleteArtwork= {handleDeleteArtwork}
+        handleEditArtwork={handleEditArtwork}
+        handleShowImage={handleShowImageModal}
+        handleDeleteArtwork={handleDeleteArtwork}
+        handleImageUpload={handleImageUpload}
       ></ArtworkGrid>
     </main>
     

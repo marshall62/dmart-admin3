@@ -185,10 +185,6 @@ export default function EditModal({ artwork, show, handleClose, handleSave }: Ed
             />
             <Form.Text className="text-muted"></Form.Text>
           </Form.Group>
-          <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Image File</Form.Label>
-            <Form.Control type="file" />
-          </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Filename in cloud</Form.Label>
             <InputGroup className="mb-3">

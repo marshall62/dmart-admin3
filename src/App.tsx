@@ -14,6 +14,7 @@ import GlobalContext from './contexts/GlobalContext';
 import { cloneArtworkCollection, getArtworks } from './services/artworks';
 import Home from './components/Home';
 import { isAnon } from './utils';
+import ImageUploader from './components/modals/imageUpload';
 
 
 function App() {
@@ -148,6 +149,10 @@ const extractTags = (artworks: IArtwork[]): Set<string> => {
         {
           path: "/login",
           element: <Login onLogin={handleLogin}/>
+        },
+        {
+          path: '/imageUpload',
+          element: <ImageUploader />
         },
         {
           path: "/logout",

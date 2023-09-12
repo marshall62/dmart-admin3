@@ -8,7 +8,7 @@ import styles from "./ArtworkGrid.module.css";
 import ConfigContext from "../contexts/ConfigContext";
 import { useContext } from "react";
 
-export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowImage, handleDeleteArtwork}) {
+export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowImage, handleDeleteArtwork, handleImageUpload}) {
   const configContext = useContext(ConfigContext);  
 
   const deleteArtwork = async (id) => {
@@ -30,6 +30,7 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
           <th>media</th>
           <th>filename</th>
           <th>Active</th>
+          <th>Image</th>
           <th></th>
         </tr>
       </thead>
@@ -42,7 +43,7 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
                 height={70}
                 alt=""
                 onClick={() => handleShowImage(a.imagePath)}
-                src={configContext.config.imageRootURI + "/" + a.imagePath}
+                src={configContext.config.imageRootURI + "/" + a.imagePath + "?raw=true"}
               ></img> 
               : <span/>}
             </td>
@@ -55,6 +56,7 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
             <td>{a.media}</td>
             <td>{a.imagePath}</td>
             <td>{!a.isActive ? "No" : ""}</td>
+            <td>{a.imagePath ? <> </> : <Button onClick={() => handleImageUpload(a)}>Upload Image</Button>}</td>
             <td>
               <div className={styles.buttondiv}>
                 <Button
