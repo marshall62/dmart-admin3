@@ -1,12 +1,11 @@
-import { IArtwork } from "models/artwork";
-import { IConfig } from "models/config";
 import { Table } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FaPencilAlt, FaTrash, FaImage } from "react-icons/fa";
 
 import styles from "./ArtworkGrid.module.css";
 import ConfigContext from "../contexts/ConfigContext";
 import { useContext } from "react";
+import { rawImageURL } from "../utils";
 
 export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowImage, handleDeleteArtwork, handleImageUpload}) {
   const configContext = useContext(ConfigContext);  
@@ -43,7 +42,7 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
                 height={70}
                 alt=""
                 onClick={() => handleShowImage(a.imagePath)}
-                src={configContext.config.imageRootURI + "/" + a.imagePath + "?raw=true"}
+                src={rawImageURL(configContext.config,a.imagePath, 'thumb') }
               ></img> 
               : <span/>}
             </td>
@@ -56,7 +55,7 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
             <td>{a.media}</td>
             <td>{a.imagePath}</td>
             <td>{!a.isActive ? "No" : ""}</td>
-            <td>{a.imagePath ? <> </> : <Button onClick={() => handleImageUpload(a)}>Upload Image</Button>}</td>
+            <td>{a.imagePath ? <> </> : <Button onClick={() => handleImageUpload(a)}><FaImage/></Button>}</td>
             <td>
               <div className={styles.buttondiv}>
                 <Button

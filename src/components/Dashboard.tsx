@@ -11,6 +11,7 @@ import { deleteArtwork, getArtworks, saveArtwork, updateArtwork } from "../servi
 import MongoContext from "../contexts/MongoContext";
 import GlobalContext from "../contexts/GlobalContext";
 import ImageUploader from "./modals/imageUpload";
+import { rawImageURL } from "../utils";
 
 export default function Dashboard ({loggedIn= false}) {
 
@@ -41,7 +42,7 @@ export default function Dashboard ({loggedIn= false}) {
 
   const handleShowImageModal = (imagePath: string) => {
     setShowImageModal(true);
-    setImageUrl(configContext.config?.imageRootURI + "/midsize/" + imagePath + "?raw=true");
+    setImageUrl(rawImageURL(configContext.config, imagePath, "midsize"));
   };
 
   const handleImageUpload = (artwork: IArtwork) => {
