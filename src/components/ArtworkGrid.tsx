@@ -4,11 +4,12 @@ import { FaPencilAlt, FaTrash, FaImage } from "react-icons/fa";
 
 import styles from "./ArtworkGrid.module.css";
 import ConfigContext from "../contexts/ConfigContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { rawImageURL } from "../utils";
 
-export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowImage, handleDeleteArtwork, handleImageUpload}) {
+export default function ArtworkGrid({ artworks, imageAdded=false, handleEditArtwork, handleShowImage, handleDeleteArtwork, handleImageUpload}) {
   const configContext = useContext(ConfigContext);  
+  const [count, setCount] = useState(0);
 
   const deleteArtwork = async (id) => {
     if (window.confirm("Delete this artwork " + id)) {
@@ -16,8 +17,19 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
     }
   };
 
+  const handleClick = () => {
+    setCount(count+1);
+  }
+
+  useEffect(() => {
+    console.log("render for image added", artworks);
+    setCount(count+1);
+    // causes the render of the component if the imageAdded changes
+  }, [imageAdded, artworks]);
+
 
   return (
+    <>
     <Table striped bordered hover>
       <thead>
         <tr>
@@ -38,9 +50,9 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
         {artworks.map((a, index) => (
           <tr key={index}>
             <td>
-              {configContext?.config?.imageRootURI ? <img
+              {configContext?.config?.imageRootURI && a.imagePath ? <img
                 height={70}
-                alt=""
+                alt={a.title + " image"}
                 onClick={() => handleShowImage(a.imagePath)}
                 src={rawImageURL(configContext.config,a.imagePath, 'thumb') }
               ></img> 
@@ -55,7 +67,12 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
             <td>{a.media}</td>
             <td>{a.imagePath}</td>
             <td>{!a.isActive ? "No" : ""}</td>
-            <td>{a.imagePath ? <> </> : <Button onClick={() => handleImageUpload(a)}><FaImage/></Button>}</td>
+            {/* <td>{a.imagePath ? <> </> : <Button 
+              onClick={() => handleImageUpload(a)}><FaImage/></Button>}</td>
+            <td> */}
+            <td><Button 
+              onClick={() => handleImageUpload(a)}><FaImage/></Button>
+            </td>
             <td>
               <div className={styles.buttondiv}>
                 <Button
@@ -76,7 +93,16 @@ export default function ArtworkGrid({ artworks, handleEditArtwork, handleShowIma
             </td>
           </tr>
         ))}
+        <td><tr>{count}</tr></td>
       </tbody>
+      
     </Table>
+    {/* <img
+                height={70}
+                onClick={() => handleShowImage(artworks[artworks.length-1].imagePath)}
+                src={rawImageURL(configContext.config,artworks[artworks.length-1].imagePath, 'thumb') }
+              ></img>  */}
+    </>
+   
   );
 }

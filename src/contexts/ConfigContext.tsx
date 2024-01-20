@@ -1,6 +1,12 @@
 import React from 'react'
-const ConfigContext = React.createContext({
-    config: {},
+import { IConfig } from '../models/config'
+
+export interface IConfigContext {
+   config: IConfig 
+}
+
+export const ConfigContext = React.createContext({
+    config: {} as IConfig,
 })
 
 export default ConfigContext

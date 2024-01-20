@@ -1,23 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { ConfigContext, IConfigContext } from "../../contexts/ConfigContext";
 import Resizer from "react-image-file-resizer";
 import { Octokit } from "https://esm.sh/@octokit/rest";
 // import axios from "axios";
 import { Button, Form, Modal } from "react-bootstrap";
+import { IConfig } from "../../models/config";
 
 function ImageUploader ({artworks, show, handleClose, handleImageUploadComplete}) {
 
-  const repo = "dmart";
-  const user = "marshall62";
+  const configContext: IConfigContext = useContext(ConfigContext);
+  const repo = import.meta.env.VITE_GITHUB_REPO;
+  const user = import.meta.env.VITE_GITHUB_OWNER;
   // Github Settings | Developer Settings | Personal Access Token (classic)
   const githubToken = import.meta.env.VITE_GITHUB_ACCESS_TOKEN;
 
   const [file, setFile] = useState(null);
 
 
-
   const getFilename = () => {
     const fileNum = getMaxFilename() + 1;
-    return `david_marshall_${fileNum}.jpg`;
+    return `${configContext.config.filename}_${fileNum}.jpg`;
   }
 
   function getMaxFilename () {

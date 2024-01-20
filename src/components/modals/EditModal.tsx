@@ -90,8 +90,8 @@ export default function EditModal({ artwork, show, handleClose, handleSave }: Ed
       tags: transformTypeaheadTags(formData.tags, example), 
       imagePath: fileNum ? (imagePathPrefix + fileNum + '.jpg') : '', 
       price: formData.price ? parseFloat(formData.price) : undefined,
-      width: formData.width ? parseInt(formData.width) : undefined,
-      height: formData.height ? parseInt(formData.height) : undefined,
+      width: formData.width ? parseFloat(formData.width) : undefined,
+      height: formData.height ? parseFloat(formData.height) : undefined,
       year: formData.year ? parseInt(formData.year) : undefined,
     }
     return editedArtwork;

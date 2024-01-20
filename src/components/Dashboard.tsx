@@ -23,6 +23,7 @@ export default function Dashboard ({loggedIn= false}) {
   const [imageUrl, setImageUrl] = useState("");
   const [showImageModal, setShowImageModal] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [imageAdded, setImageAdded] = useState(false);
   const [artworks, setArtworks] = useState<IArtwork[]>([]);
 
   useEffect(() => {
@@ -46,15 +47,30 @@ export default function Dashboard ({loggedIn= false}) {
   };
 
   const handleImageUpload = (artwork: IArtwork) => {
+    setImageAdded(false);
     setShowImageUpload(true);
     setArtworkToEdit(artwork);
   };
+
+  function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+  
+  delay(1000).then(() => console.log('ran after 1 second1 passed'));
+  
 
   const handleImageUploadComplete = async (uploadedFilename) => {
     artworkToEdit.imagePath = uploadedFilename;
     console.log("Updating filename to ", uploadedFilename)
     await updateArtwork(mongoContext.client, artworkToEdit); 
-    setShowImageUpload(false);
+    delay(1500).then(() => {
+      // setImageAdded(true);
+      console.log("Added image to artwork", artworkToEdit);
+      //changes the artworks list so that the ArtworkGrid will render
+      updateArtworksWhenArtworkChanges(artworkToEdit);
+      setArtworkToEdit({} as IArtwork);
+      setShowImageUpload(false);
+    });
   }
 
   const handleCloseImageUpload = () => {
@@ -100,12 +116,17 @@ export default function Dashboard ({loggedIn= false}) {
       setArtworks([...artworks, artwork]);
     } 
     else if (status === 200 && exists) {
-      const ix = artworks.findIndex((x) => artwork._id === x._id);
-      const newList = artworks.slice(); // clone
-      newList.splice(ix, 1, artwork); // replace
-      setArtworks(newList);
+      updateArtworksWhenArtworkChanges(artwork);
     }
+    setArtworkToEdit({} as IArtwork);
   };
+
+  const updateArtworksWhenArtworkChanges = (artwork: IArtwork) => {
+    const ix = artworks.findIndex((x) => artwork._id === x._id);
+    const newList = artworks.slice(); // clone
+    newList.splice(ix, 1, artwork); // replace
+    setArtworks(newList);
+  }
 
   const updateTagSet = (artworkTags: string[] = []) => {
     const newTags = artworkTags.some(tag => !globalContext.tags.has(tag))
@@ -121,7 +142,6 @@ export default function Dashboard ({loggedIn= false}) {
     setShowEditorModal(false);   
   };
 
-  console.log("iamgeRootURI",configContext.config)
   if (!loggedIn)
     return(<span>Please Login</span>);
   else return (
@@ -164,14 +184,18 @@ export default function Dashboard ({loggedIn= false}) {
         handleClose={handleCloseImageUpload}
         handleImageUploadComplete={handleImageUploadComplete}
         />     
-
-      <ArtworkGrid
-        artworks= {artworks}
-        handleEditArtwork={handleEditArtwork}
-        handleShowImage={handleShowImageModal}
-        handleDeleteArtwork={handleDeleteArtwork}
-        handleImageUpload={handleImageUpload}
-      ></ArtworkGrid>
+      <div>
+        <ArtworkGrid
+          artworks= {artworks}
+          handleEditArtwork={handleEditArtwork}
+          handleShowImage={handleShowImageModal}
+          handleDeleteArtwork={handleDeleteArtwork}
+          handleImageUpload={handleImageUpload}
+        ></ArtworkGrid>
+        <Button data-testid="addArtwork" onClick={handleAdd}>
+          <GrAdd />
+        </Button>
+      </div>
     </main>
     
   );

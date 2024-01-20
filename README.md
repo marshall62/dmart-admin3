@@ -8,12 +8,6 @@ This will run on
 
 `http://localhost:5173/`
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 # Information about Dmart3 web app for davidmarshall.us
 
@@ -23,8 +17,8 @@ https://github.com/marshall62/dmart: images folder of all the artworks (+ old An
 
 https://github.com/marshall62/dmart-admin3:  React UI for administrating the website. Talks to mongo atlas directly using mongoatlas realm sdk for web
 
-https://github.com/marshall62/dmart-api: Python FastAPI Back end for admin to modify the mongo db.   No longer in use except there are Python
-utilities I use for resizing and renaming image files to prepare them for push to github
+https://github.com/marshall62/dmart-api: Python FastAPI Back end for admin to modify the mongo db.   No longer in use.  It also has
+utilities I used to use for resizing and renaming image files to prepare them for push to github
 
 
 Back end:
@@ -39,25 +33,35 @@ I have locally install Mongo Db Compass which connects to the db with URI (in se
 Domain Name:  GoDaddy:  https://dcc.godaddy.com/manage/davidmarshall.us/dns
 Website Hosting: Vercel: https://vercel.com/marshall62/dmart3
 
-# Adding images to the Website
-This is currently managed using dmart-admin (a React app) that needs to be reworked.
-It currently requires that I run a local Python backend (dmart-api) which makes changes to the mongo db. 
+Required:  Github account with personal access token (PAT).  These are then stored in .env.development.local
 
-See the instructions in dmart-api for starting the app:
-`source serve.sh` 
-dmart-admin: 
-`npm start&` : localhost:3000
+# Adding images to the Website (updated 1/2024)
+Adding artwork to the website is currently managed using this app.  It uses an API to a mongoAtlas cloud database.
+The images for the website are uploaded to github.
 
-The dmart repo in github is where images must be placed.  This is done using git push
-on this repo after image directories are modified locally
+Process:
 
-There are also tools within the dmart-api for doing things like resizing images and renaming the image files in the directories.  There are instructions within the repo for doing these things.
+Run the app with `npm run dev`
+Click on the + button to add an artwork.  Give it some information about the artwork but do not give an image file name.  Save
+You will see a new row in the artwork table with upload-image button in a rightmost column.  Click this to upload an image.
+This will automatically upload the image to github in three different sizes.  It will also name the image file with an index one greater than the highest numbered index.  
+ 
+ The images are in this repo: https://github.com/marshall62/dmart  
 
-# TODO
+# TODO 
 
-Eliminating the Python dmart-api.  This would require that the dmart-admin UI work as a MongoDb Realm Web app.  It would require a more complex login that what the dmart3 UI (which uses anonymous login) uses so that it can modify and create records in the db.
 
-The tools for resizing images and directory manipulation could be built into the dmart-admin UI but that would call into question the tools I've written in python for doing this
+Currently this app is not deployed to the cloud.  I run it locally only.  The login is in preparation for deployment to cloud
+
+Bug:  When an image is uploaded it returns to the artwork grid but the thumbnail doesn't show up in the grid.
+There is a GET request to download the image thumbnail from github but it is giving back a 404 for some reason.  Perhaps it takes a while before the image is really there and the UI is fetching too soon.
+
+Its weird that I can't upload an image more than once to an artwork.  I think its just because I 
+made the button visible only when the artwork has no image file.  This isn't good.  The previous image will also be left in the repo as junk.  So uploading a second image really should delete the previous one from the repo and then upload one with that same name.
+
+Deleting artworks, doesn't delete the image from github.  This is because we are trying to maintain a sequence of image files with a numbering scheme.   It should be possible to delete a file from the repo without breaking things though.
+
+If I deploy to vercel, .env needs to be adjusted so it can connect to github
 
 # Deploying a change to Website UI.
 

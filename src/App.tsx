@@ -16,11 +16,13 @@ import Home from './components/Home';
 import { isAnon } from './utils';
 import ImageUploader from './components/modals/imageUpload';
 
+const temp = "dm-art-api-jznsb";
 
 function App() {
   const [client, setClient] = useState(undefined)
   const [user, setUser] = useState<Realm.User | null>(null)
   const [app, setApp] = useState<Realm.App>(new Realm.App({id: import.meta.env.VITE_REALM_APP_ID}))
+  // const [app, setApp] = useState<Realm.App>(new Realm.App({id: temp}))
   const [config, setConfig]: [IConfig | null, (x: IConfig | null) => void] = useState<IConfig | null>(null)
   const [allTags, setAllTags] = useState<Set<string>>(new Set<string>())
   const [tempFlag, setTempFlag] = useState(true);
@@ -31,7 +33,6 @@ function App() {
     const credentials = Realm.Credentials.emailPassword(email, password);
     // Authenticate the user
     const user = await app.logIn(credentials);
-    console.log("obtained real user",user)
     setLoggedIn(true);
     // `App.currentUser` updates to match the logged in user
     console.assert(user.id === app.currentUser.id);
