@@ -33,8 +33,9 @@ I have locally install Mongo Db Compass which connects to the db with URI (in se
 Domain Name:  GoDaddy:  https://dcc.godaddy.com/manage/davidmarshall.us/dns
 Website Hosting: Vercel: https://vercel.com/marshall62/dmart3
 
-Required:  Github account with personal access token (PAT).  These are then stored in .env.development.local
-
+Required:  Github account with personal access token (PAT).  These are then stored in .env.development.local   My current token expires on 12/31/2024  so it will need to be regenerated in the
+developer tools of Github - Click User Icon (upper right) | Settings | Developer Settings (lower left) | Classic PAT
+ 
 # Adding images to the Website (updated 1/2024)
 Adding artwork to the website is currently managed using this app.  It uses an API to a mongoAtlas cloud database.
 The images for the website are uploaded to github.

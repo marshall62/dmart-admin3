@@ -185,7 +185,7 @@ export default function EditModal({ artwork, show, handleClose, handleSave }: Ed
             />
             <Form.Text className="text-muted"></Form.Text>
           </Form.Group>
-          <Form.Group className="mb-3">
+          {/* <Form.Group className="mb-3">
             <Form.Label>Filename in cloud</Form.Label>
             <InputGroup className="mb-3">
               <InputGroup.Text>{imagePathPrefix}</InputGroup.Text>
@@ -197,7 +197,7 @@ export default function EditModal({ artwork, show, handleClose, handleSave }: Ed
               />
               <InputGroup.Text>.jpg</InputGroup.Text>
             </InputGroup>
-          </Form.Group>
+          </Form.Group> */}
 
           <Form.Group className="mb-3">
             <Form.Label>Media</Form.Label>
